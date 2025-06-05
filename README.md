@@ -64,17 +64,7 @@ The model is compiled with the `Adam` optimizer, which is an adaptive learning r
 
 ## Experiment Table
 
-To find the best performing model, a systematic approach to experimentation is crucial. The following table is a template to record the details and results of different model configurations. You should conduct at least 15 experiments by varying hyperparameters such as:
-
-- **Learning Rate:** Experiment with different values for the Adam optimizer (e.g., 0.01, 0.001, 0.0001).
-- **Batch Size:** Vary the number of samples per gradient update (e.g., 32, 64, 128).
-- **Optimizer:** Try other optimizers like RMSprop or SGD with different learning rates and momentum.
-- **Number of LSTM Layers:** Add more LSTM layers.
-- **Number of Units per LSTM/Dense Layer:** Change the number of units in the layers.
-- **Activation Functions:** Experiment with different activation functions in the Dense layers (e.g., sigmoid, tanh).
-- **Dropout Rate:** Add Dropout layers to prevent overfitting and experiment with different rates (e.g., 0.1, 0.2, 0.3).
-- **Regularization:** Add L1 or L2 regularization to the layers.
-- **Timesteps:** Experiment with different sequence lengths (e.g., 12, 48).
+To find the best performing model, a systematic approach to experimentation is crucial.
 
 | Experiment No. | Learning Rate | Batch Size | Optimizer | LSTM Layers | LSTM Units | Dense Layers | Dense Units | Activation Functions | Dropout | Regularization | Timesteps | Validation RMSE | Notes |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
@@ -112,19 +102,13 @@ Further experimentation with different model architectures, hyperparameters, and
 
 Visualizing the model's predictions against the actual values on a portion of the validation or test set would provide a clearer picture of its performance and where it makes errors.
 
-## Code Quality & GitHub Submission
+## Code Quality
 
-[Include a brief description of your code quality practices, such as commenting, modularity (e.g., using functions), and organization. Provide the link to your GitHub repository here.]
-
-The code in this notebook is organized into logical sections for data loading, exploration, preprocessing, model building, training, and prediction. Comments are included to explain key steps. The code is available on GitHub at:
-
-[Insert your GitHub repository link here]
-
-The repository is structured with the notebook file and can be extended to include separate scripts, data folders, and output folders for better organization in a larger project.
+The code in this notebook is organized into logical sections for data loading, exploration, preprocessing, model building, training, and prediction. Comments are included to explain key steps.
 
 ## Conclusion
 
-In this project, we tackled the task of forecasting Beijing's PM2.5 air quality using an LSTM model. We performed comprehensive data exploration to understand the dataset's characteristics, including missing values, distributions, and temporal patterns. The data was preprocessed by handling missing values through interpolation and imputation, engineering temporal features, and scaling the data.
+In this project, I tackled the task of forecasting Beijing's PM2.5 air quality using an LSTM model. We performed comprehensive data exploration to understand the dataset's characteristics, including missing values, distributions, and temporal patterns. The data was preprocessed by handling missing values through interpolation and imputation, engineering temporal features, and scaling the data.
 
 A baseline LSTM model was built and trained, demonstrating the feasibility of using LSTMs for this forecasting problem. The initial results, as indicated by the validation RMSE, show room for improvement.
 
@@ -140,6 +124,4 @@ Addressing the challenges of time series forecasting, such as capturing long-ter
 
 ## Report Citations & Originality
 
-[Include a section here for your citations in IEEE format. Ensure all external sources referenced in your report and code are cited appropriately.]
-
-This report is based on the analysis and code developed for the Beijing Air Quality Forecasting project. While standard libraries and common machine learning techniques were used, the specific implementation and analysis presented are original to this project. Any external resources that informed the approach or code would be cited here in IEEE format.
+This report is based on the analysis and code developed for the Beijing Air Quality Forecasting project. While standard libraries and common machine learning techniques were used, the specific implementation and analysis presented are original to this project.
