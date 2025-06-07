@@ -114,7 +114,7 @@ This project successfully developed an LSTM model capable of forecasting hourly 
 [7] UCI Machine Learning Repository, “Beijing Multi-Site Air-Quality Data,” 2017. [Online]. Available: https://archive.ics.uci.edu/ml/datasets/Beijing+Multi-Site+Air-Quality+Data  
 [8] J. Brownlee, “Time Series Forecasting with the Long Short-Term Memory Network in Python,” Machine Learning Mastery, 2017. [Online]. Available: https://machinelearningmastery.com/time-series-forecasting-long-short-term-memory-network-python/  
 [9] A. Graves, “Supervised sequence labelling with recurrent neural networks,” Ph.D. dissertation, Technical University of Munich, 2008.  
-[10] A. Dedigba, “Time-Series Forecasting,” GitHub repository. [Online]. Available: https://github.com/aadedigbae/Time-Series-Forecasting  
+[10] A. Adedigba, “Time-Series Forecasting,” GitHub repository. [Online]. Available: https://github.com/aadedigbae/Time-Series-Forecasting  
 
 ## AI Assistance Disclosure
 
