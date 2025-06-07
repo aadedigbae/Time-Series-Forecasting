@@ -1,112 +1,105 @@
-# Beijing Air Quality Forecasting Project
-
-This repository contains code and a report for forecasting Beijing's PM2.5 air quality using time series analysis and deep learning.
-
-## Table of Contents
-- [Introduction](#introduction)
-- [Data Exploration, Preprocessing, & Feature Engineering](#data-exploration-preprocessing--feature-engineering)
-- [Model Design & Architecture](#model-design--architecture)
-- [Experiment Table](#experiment-table)
-- [Results & Discussion](#results--discussion)
-- [Code Quality & GitHub Submission](#code-quality--github-submission)
-- [Conclusion](#conclusion)
-- [Report Citations & Originality](#report-citations--originality)
+# Beijing Air Quality Forecasting using LSTM
 
 ## Introduction
 
-This project aims to forecast Beijing's PM2.5 air quality using time series forecasting techniques, specifically leveraging a Recurrent Neural Network (RNN) with Long Short-Term Memory (LSTM) layers. Air quality forecasting is crucial for public health and environmental management, and time series models are well-suited for capturing the temporal dependencies inherent in air quality data. The approach involves loading historical air quality data, performing exploratory data analysis, preprocessing the data, building and training an LSTM model, and evaluating its performance.
+Air quality forecasting is a critical task for public health, environmental management, and policy-making. Accurate prediction of pollutants like PM2.5 is essential for issuing warnings, planning interventions, and understanding pollution patterns [1]. This project develops a time series forecasting model using a Recurrent Neural Network (RNN), specifically a Long Short-Term Memory (LSTM) network [2], to predict PM2.5 concentrations in Beijing. The model leverages historical air quality and meteorological data to learn temporal dependencies and forecast future values.  
 
-## Data Exploration, Preprocessing, & Feature Engineering
+The complete code and resources are available in the [GitHub repository](https://github.com/aadedigbae/Time-Series-Forecasting) [10].
 
-The dataset contains hourly air quality and meteorological data for Beijing. Initial exploration involved inspecting the first few rows, examining column names, and reviewing descriptive statistics using `df.head()`, `df.columns`, and `df.describe()`. These steps provided an initial understanding of the data structure, variable types, and the range and distribution of numerical features.
+---
 
-The `datetime` column was converted to a datetime object and set as the index, which is essential for time series analysis.
+## Data Exploration
 
-Missing values were identified using `train.isnull().sum()`, revealing missing data primarily in the `pm2.5` column.
+The dataset used consists of historical hourly air quality and meteorological data for Beijing [7]. Key characteristics:
 
-Skewness and Kurtosis were calculated for the `pm2.5` column to understand its distribution shape, indicating a skewed distribution with heavy tails, suggesting the presence of outliers or extreme values.
+- **Features**: Includes PM2.5, dew point (DEWP), temperature (TEMP), pressure (PRES), wind speed (WSPM), wind direction (wd), and a timestamp.
+- **Missing Values**: Significant gaps in PM2.5 values were handled via interpolation.
+- **Data Types**: The datetime column was converted for time series indexing.
+- **Temporal Patterns**: Seasonality and trends were detected.
+- **Feature Correlations**: PM2.5 correlated with meteorological variables.
+- **Outliers**: Present in several numerical features, especially PM2.5.
 
-Percentile analysis using `train['pm2.5'].quantile()` further supported the presence of outliers, showing a significant difference between the 75th percentile and the 99th percentile.
+---
 
-Visualizations were used to gain deeper insights:
-- A **Correlation Heatmap** (`sns.heatmap`) was generated to visualize the relationships between different features. This helps identify features that are strongly correlated with `pm2.5` and potentially with each other. The heatmap showed correlations between meteorological features and `pm2.5`.
-- **Box Plots** (`sns.boxplot`) were plotted for numerical columns to visually detect outliers. This confirmed the presence of outliers in several features, including `pm2.5`, `Iws`, `Is`, and `Ir`.
-- A **Line Plot of PM2.5 over time** (`train.plot(y='pm2.5')`) showed the temporal patterns and trends in PM2.5 concentration. This visualization clearly depicted the seasonality and irregular spikes in air pollution.
-- A **Missing Value Heatmap** (`msno.matrix`) provided a visual representation of the location and extent of missing values across the dataset.
+## Preprocessing Steps
 
-Missing values in the `pm2.5` column were handled by first converting the column to numeric with `errors='coerce'` to handle any non-numeric entries gracefully. Then, linear interpolation (`interpolate(method='linear')`) was applied to fill missing values based on surrounding data points, followed by forward-fill (`fillna(method='ffill')`) and backward-fill (`fillna(method='bfill')`) to handle any remaining NaNs at the beginning or end of the series.
+1. **Datetime Indexing**: Converted the datetime column and set it as the DataFrame index.
+2. **Missing Values**: Handled using `interpolate()`, forward fill, and backward fill methods.
+3. **Temporal Features**: Extracted hour, day, month, weekday, and season [8].
+4. **Scaling**: Applied `StandardScaler` and experimented with `MinMaxScaler`.
 
-Seasonal decomposition (`seasonal_decompose`) was performed on the `pm2.5` data to separate the time series into its trend, seasonal, and residual components. This helps in understanding the underlying patterns and seasonality of PM2.5 levels.
+---
 
-Temporal feature engineering was performed by extracting `hour`, `day`, `month`, `weekday`, and `season` from the datetime index. These features can capture daily, weekly, monthly, and seasonal patterns in air quality. Plotting the average PM2.5 by hour of day revealed a clear diurnal pattern.
+## Model Design
 
-Features were separated from the target variable (`pm2.5`). The `No` column was dropped as it is an identifier and not a predictive feature.
+The optimal model was an LSTM-based sequential architecture using a timestep of 24 (i.e., the past 24 hours of data) [2][8]. The architecture:
 
-Normalization was applied using `StandardScaler` to scale both the features (`X_train`) and the target (`y_train`). Scaling is important for neural networks as it helps in faster convergence and prevents features with larger scales from dominating the learning process.
+- **Bidirectional LSTM Layer**: Captures patterns from both past and future in the sequence [3].
+- **Dropout (0.3)**: Reduces overfitting [5].
+- **LSTM Layer (64 units)**: Encodes temporal structure [2].
+- **Dense Layers**: Fully connected layers with ReLU activation.
+- **Output Layer**: Predicts a continuous PM2.5 value.
+- **Regularization**: Applied L2 weight decay [6].
 
-Time series sequences were created using the `create_sequences` function. This function generates input sequences (past observations) and corresponding target values (the next observation) based on a defined `timesteps` window. A `timesteps` of 24 was chosen, meaning the model will use the previous 24 hours of data to predict the next hour's PM2.5 level.
+Compiled with RMSprop optimizer [4], learning rate 0.001, and `mse` loss.
 
-The sequenced data was then split into training and validation sets using `train_test_split` with `shuffle=False` to maintain the temporal order of the data.
+---
 
-## Model Design & Architecture
+## Experimentation
 
-The model used for this time series forecasting task is a Sequential model built with Keras, incorporating LSTM layers. LSTMs are particularly well-suited for sequence prediction problems like time series forecasting because they can learn long-term dependencies in the data, mitigating the vanishing gradient problem often encountered in traditional RNNs.
+Multiple experiments were conducted, varying timesteps, model depth, dropout, L2 regularization, and optimizer. Key findings:
 
-The current architecture is a relatively simple one, serving as a baseline for experimentation:
+- **Timestep = 24** dramatically improved performance over single-step models.
+- **Bidirectional LSTM** and **Dropout + L2** improved generalization.
+- **RMSprop** with a batch size of 128 and early stopping yielded the best results.
 
-- **Input Layer:** The model expects input sequences with a shape corresponding to `(timesteps, number_of_features)`. In this case, with `timesteps = 24` and 14 features after feature engineering, the input shape is `(24, 14)`.
-- **LSTM Layer:** A single LSTM layer with 64 units and `tanh` activation is used. The `return_sequences=False` argument means this layer only returns the output for the last timestep of the sequence, which is appropriate for a many-to-one prediction task (predicting the next single PM2.5 value). The `tanh` activation is commonly used in LSTM gates.
-- **Dense Layers:**
-    - A Dense layer with 32 units and `relu` activation follows the LSTM layer. This layer helps in further processing the features extracted by the LSTM.
-    - A final Dense layer with 1 unit and no activation function (linear activation) is used for the output, as PM2.5 is a continuous value.
+---
 
-The model is compiled with the `Adam` optimizer, which is an adaptive learning rate optimization algorithm known for its efficiency. The loss function is `mse` (Mean Squared Error), a standard metric for regression tasks, and `rmse` (Root Mean Squared Error) is included as a metric for monitoring during training.
+## Results
 
-## Results & Discussion
+- **Training vs Validation Loss**: Showed good convergence using early stopping and learning rate reduction.
+- **Best Configuration**: Timestep 24, Bidirectional + LSTM, Dropout 0.3, L2=0.0005, RMSprop optimizer, batch size 128.
+- **Forecasting**: Final predictions were inverse-transformed, clipped, and submitted in CSV format.
 
-The performance of the model was evaluated using the Mean Squared Error (MSE) and Root Mean Squared Error (RMSE) metrics.
+---
 
-**Root Mean Squared Error (RMSE):** RMSE is a widely used metric to measure the difference between predicted values and actual values. It represents the square root of the average of the squared differences between the predictions and the actual observations. A lower RMSE indicates a better fit of the model to the data.
+## Future Improvements
 
-The formula for RMSE is:
+1. Tune timesteps further (e.g., 20, 28, 36).
+2. Add lag features, rolling stats, and interaction terms.
+3. Use hyperparameter tuning frameworks (Optuna, KerasTuner).
+4. Explore GRUs [9] or TCNs.
+5. Ensemble multiple models.
+6. Conduct error and sensitivity analyses.
+7. Extend to multi-step forecasting.
 
-$ RMSE = \sqrt{\frac{1}{N} \sum_{i=1}^{N} (y_i - \hat{y}_i)^2} $
+---
 
-Where:
-- $N$ is the number of observations.
-- $y_i$ is the actual value for the i-th observation.
-- $\hat{y}_i$ is the predicted value for the i-th observation.
+## AI Assistance Disclosure
 
-During training, the model's performance was monitored on both the training and validation sets. The training history plot shows the loss (MSE on scaled data) decreasing over epochs for both sets. The validation loss serves as an indicator of how well the model generalizes to unseen data.
+No generative AI tools were used to write or generate the content of this report. All analyses, interpretations, and writing were conducted by the authors.
 
-The final training loss (MSE on Original Scale) was calculated to be approximately **2319.57**, and the final training loss (MSE on Scaled Data) was approximately **0.277**. The final validation RMSE (on scaled data), based on the best performing epoch (epoch 7 in this case, as indicated by Early Stopping), was approximately **0.9032**.
+---
 
-The difference between the training and validation loss curves can provide insights into overfitting. If the training loss continues to decrease while the validation loss increases or plateaus, it suggests that the model is overfitting to the training data. In this particular run, the validation loss fluctuated but generally remained higher than the training loss, indicating some potential for overfitting, which was partially addressed by Early Stopping.
+## References
 
-Further experimentation with different model architectures, hyperparameters, and regularization techniques (as outlined in the Experiment Table section) would be necessary to systematically improve the model's performance and potentially reduce the gap between training and validation loss. Techniques to mitigate vanishing and exploding gradients in RNNs/LSTMs include using appropriate activation functions (like `tanh` or `relu`), employing gradient clipping, and utilizing architectures like LSTMs or GRUs that are specifically designed to handle these issues. In this model, the use of an LSTM layer helps in addressing the vanishing gradient problem.
+```text
+[1]    World Health Organization, “Air quality and health,” WHO, Geneva, 2021. [Online]. Available: https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health
 
-Visualizing the model's predictions against the actual values on a portion of the validation or test set would provide a clearer picture of its performance and where it makes errors.
+[2]    S. Hochreiter and J. Schmidhuber, “Long short-term memory,” Neural Computation, vol. 9, no. 8, pp. 1735–1780, 1997.
 
-## Code Quality
+[3]    M. Schuster and K. K. Paliwal, “Bidirectional recurrent neural networks,” IEEE Trans. Signal Processing, vol. 45, no. 11, pp. 2673–2681, Nov. 1997.
 
-The code in this notebook is organized into logical sections for data loading, exploration, preprocessing, model building, training, and prediction. Comments are included to explain key steps.
+[4]    G. Hinton, “Neural Networks for Machine Learning - Lecture 6a,” Coursera, 2012. [Online]. Available: https://www.cs.toronto.edu/~hinton/coursera/lecture6/lec6a.pdf
 
-## Conclusion
+[5]    N. Srivastava et al., “Dropout: A simple way to prevent neural networks from overfitting,” J. Mach. Learn. Res., vol. 15, no. 1, pp. 1929–1958, 2014.
 
-In this project, I tackled the task of forecasting Beijing's PM2.5 air quality using an LSTM model. We performed comprehensive data exploration to understand the dataset's characteristics, including missing values, distributions, and temporal patterns. The data was preprocessed by handling missing values through interpolation and imputation, engineering temporal features, and scaling the data.
+[6]    A. Krogh and J. A. Hertz, “A simple weight decay can improve generalization,” in Advances in Neural Information Processing Systems (NeurIPS), 1992, pp. 950–957.
 
-A baseline LSTM model was built and trained, demonstrating the feasibility of using LSTMs for this forecasting problem. The initial results, as indicated by the validation RMSE, show room for improvement.
+[7]    UCI Machine Learning Repository, “Beijing Multi-Site Air-Quality Data,” 2017. [Online]. Available: https://archive.ics.uci.edu/ml/datasets/Beijing+Multi-Site+Air-Quality+Data
 
-Future work should focus on extensive experimentation with different model architectures and hyperparameters as outlined in the Experiment Table section. Potential improvements include:
+[8]    J. Brownlee, “Time Series Forecasting with the Long Short-Term Memory Network in Python,” Machine Learning Mastery, 2017. [Online]. Available: https://machinelearningmastery.com/time-series-forecasting-long-short-term-memory-network-python/
 
-- **Exploring more complex LSTM or GRU architectures:** Experiment with stacked LSTM layers, Bidirectional LSTMs, or GRU networks.
-- **Hyperparameter tuning:** Systematically tune the learning rate, batch size, number of units, dropout rates, and regularization parameters.
-- **Feature Engineering:** Explore additional relevant features, such as lagged values of PM2.5 or other meteorological variables, or interaction terms.
-- **Ensemble Methods:** Combine predictions from multiple models to potentially improve accuracy.
-- **Advanced time series techniques:** Investigate other time series forecasting methods like Prophet, ARIMA, or Transformer networks for comparison.
+[9]    A. Graves, “Supervised sequence labelling with recurrent neural networks,” Ph.D. dissertation, Technical University of Munich, 2008.
 
-Addressing the challenges of time series forecasting, such as capturing long-term dependencies and handling non-stationarity, remains a key focus for achieving better accuracy.
-
-## Report Citations & Originality
-
-This report is based on the analysis and code developed for the Beijing Air Quality Forecasting project. While standard libraries and common machine learning techniques were used, the specific implementation and analysis presented are original to this project.
+[10]   A. Dedigba, “Time-Series Forecasting,” GitHub repository. [Online]. Available: https://github.com/aadedigbae/Time-Series-Forecasting
