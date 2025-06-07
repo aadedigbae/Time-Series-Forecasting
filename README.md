@@ -62,21 +62,6 @@ The current architecture is a relatively simple one, serving as a baseline for e
 
 The model is compiled with the `Adam` optimizer, which is an adaptive learning rate optimization algorithm known for its efficiency. The loss function is `mse` (Mean Squared Error), a standard metric for regression tasks, and `rmse` (Root Mean Squared Error) is included as a metric for monitoring during training.
 
-## Experiment Table
-
-To find the best performing model, a systematic approach to experimentation is crucial.
-
-| Experiment No. | Learning Rate | Batch Size | Optimizer | LSTM Layers | LSTM Units | Dense Layers | Dense Units | Activation Functions | Dropout | Regularization | Timesteps | Validation RMSE | Notes |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 (Baseline) | 0.001 | 64 | Adam | 1 | 64 | 2 | 32, 1 | tanh (LSTM), relu (Dense) | None | None | 24 | 0.9032 | Initial model |
-| 2 |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| ... |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| 15+ |  |  |  |  |  |  |  |  |  |  |  |  |  |
-
-*Fill in the table with the parameters and resulting validation RMSE for each experiment.*
-
-Discuss how variations in these parameters impacted the model's performance and how you arrived at the best configuration. Note any observations regarding overfitting or underfitting during these experiments.
-
 ## Results & Discussion
 
 The performance of the model was evaluated using the Mean Squared Error (MSE) and Root Mean Squared Error (RMSE) metrics.
