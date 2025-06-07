@@ -108,10 +108,10 @@ This project successfully developed an LSTM model capable of forecasting hourly 
 [1] World Health Organization, “Air quality and health,” WHO, Geneva, 2021. [Online]. Available: https://www.who.int/news-room/fact-sheets/detail/ambient-(outdoor)-air-quality-and-health  
 [2] S. Hochreiter and J. Schmidhuber, “Long short-term memory,” Neural Computation, vol. 9, no. 8, pp. 1735–1780, 1997.  
 [3] M. Schuster and K. K. Paliwal, “Bidirectional recurrent neural networks,” IEEE Trans. Signal Processing, vol. 45, no. 11, pp. 2673–2681, Nov. 1997.  
-[4] G. Hinton, “Neural Networks for Machine Learning - Lecture 6a,” Coursera, 2012. [Online]. Available: https://www.cs.toronto.edu/~hinton/coursera/lecture6/lec6a.pdf  
+[4] G. Hinton, “Neural Networks for Machine Learning - Lecture 6a,” Coursera, 2012. [Online]. Available: [https://www.cs.toronto.edu/~hinton/coursera/lecture6/lec6a.pdf](https://www.researchgate.net/publication/388734824_Implementation_of_Neural_Networks_on_FPGA  
 [5] N. Srivastava et al., “Dropout: A simple way to prevent neural networks from overfitting,” J. Mach. Learn. Res., vol. 15, no. 1, pp. 1929–1958, 2014.  
 [6] A. Krogh and J. A. Hertz, “A simple weight decay can improve generalization,” in NeurIPS, 1992, pp. 950–957.  
-[7] UCI Machine Learning Repository, “Beijing Multi-Site Air-Quality Data,” 2017. [Online]. Available: https://archive.ics.uci.edu/ml/datasets/Beijing+Multi-Site+Air-Quality+Data  
+[7] Research Gate, “Beijing Multi-Site Air-Quality Data,” 2015. [Online]. Available: [https://archive.ics.uci.edu/ml/datasets/Beijing+Multi-Site+Air-Quality+Data](https://www.researchgate.net/publication/388734824_Implementation_of_Neural_Networks_on_FPGA)  
 [8] J. Brownlee, “Time Series Forecasting with the Long Short-Term Memory Network in Python,” Machine Learning Mastery, 2017. [Online]. Available: https://machinelearningmastery.com/time-series-forecasting-long-short-term-memory-network-python/  
 [9] A. Graves, “Supervised sequence labelling with recurrent neural networks,” Ph.D. dissertation, Technical University of Munich, 2008.  
 [10] A. Adedigba, “Time-Series Forecasting,” GitHub repository. [Online]. Available: https://github.com/aadedigbae/Time-Series-Forecasting  
